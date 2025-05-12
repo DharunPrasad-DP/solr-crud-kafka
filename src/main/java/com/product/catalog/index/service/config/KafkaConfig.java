@@ -32,6 +32,7 @@ public class KafkaConfig {
         return new DefaultKafkaProducerFactory<>(config);
     }
 
+//    Creates kafka producers to produce kafka message with a defined pojo(String,ProductEvent)
     @Bean
     public KafkaTemplate<String, ProductEvent> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
@@ -44,10 +45,14 @@ public class KafkaConfig {
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "product-group");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+//        all source of inputs are deserialized
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return new DefaultKafkaConsumerFactory<>(config);
     }
 
+//    KafkaListenerContainerFactory → Creates Kafka listener containers.
+//    ConsumerFactory → Defines how consumers are created.
+//    KafkaListenerContainerFactory uses the ConsumerFactory to spawn multiple consumers.
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ProductEvent> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, ProductEvent> factory =
